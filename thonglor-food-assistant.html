@@ -33,6 +33,7 @@
     font-family: 'Segoe UI', 'Noto Sans Thai', Arial, sans-serif;
     font-size: 14px;
     min-height: 100vh;
+    scroll-behavior: smooth;
   }
 
   /* ── HEADER ── */
@@ -48,7 +49,7 @@
   .nav-pill {
     background: #222; border: 1px solid #333; border-radius: 4px;
     color: #aaa; font-size: 11px; padding: 4px 12px; cursor: pointer;
-    transition: all .2s;
+    transition: all .2s; user-select: none;
   }
   .nav-pill:hover, .nav-pill.active { background: var(--pink); color: #fff; border-color: var(--pink); }
 
@@ -268,18 +269,18 @@
 <header class="site-header">
   <div class="logo">⬡ AI FOOD ASSISTANT</div>
   <div class="nav-pills">
-    <div class="nav-pill active">Thonglor</div>
-    <div class="nav-pill">Objective</div>
-    <div class="nav-pill">Workflow</div>
-    <div class="nav-pill">Top 10</div>
-    <div class="nav-pill">Top 3</div>
-    <div class="nav-pill">Trade-off</div>
+    <div class="nav-pill active" data-target="section-thonglor" onclick="navScrollTo('section-thonglor')">Thonglor</div>
+    <div class="nav-pill" data-target="section-objective" onclick="navScrollTo('section-objective')">Objective</div>
+    <div class="nav-pill" data-target="section-workflow" onclick="navScrollTo('section-workflow')">Workflow</div>
+    <div class="nav-pill" data-target="section-top10" onclick="navScrollTo('section-top10')">Top 10</div>
+    <div class="nav-pill" data-target="section-top3" onclick="navScrollTo('section-top3')">Top 3</div>
+    <div class="nav-pill" data-target="section-tradeoff" onclick="navScrollTo('section-tradeoff')">Trade-off</div>
   </div>
   <div class="live-badge"><span class="live-dot"></span>LIVE DATA</div>
 </header>
 
 <!-- ── HERO ── -->
-<div class="hero">
+<div id="section-thonglor" class="hero">
   <div class="hero-badge">AI Workflow · Food Decision · Team 8–12</div>
   <div style="font-size:12px;color:#666;margin-bottom:6px">ศรัณย์ นาภรณ์ &nbsp;|&nbsp; 6 มิถุนายน 2569</div>
   <h1>ระบบแนะนำร้านอาหาร<br><span>ย่านทองหล่อ</span></h1>
@@ -296,7 +297,7 @@
 <div class="page">
 
   <!-- ── OBJECTIVE ── -->
-  <div class="section-sep">
+  <div id="section-objective" class="section-sep">
     <div class="win">
       <div class="win-bar pink">
         <div class="win-dots"><span class="win-dot r"></span><span class="win-dot y"></span><span class="win-dot g"></span></div>
@@ -331,7 +332,7 @@
   </div>
 
   <!-- ── WORKFLOW ── -->
-  <div class="section-sep">
+  <div id="section-workflow" class="section-sep">
     <div class="win">
       <div class="win-bar purple">
         <div class="win-dots"><span class="win-dot r"></span><span class="win-dot y"></span><span class="win-dot g"></span></div>
@@ -511,7 +512,7 @@
   </div>
 
   <!-- ── TOP 10 TABLE ── -->
-  <div class="section-sep">
+  <div id="section-top10" class="section-sep">
     <div class="win">
       <div class="win-bar pink">
         <div class="win-dots"><span class="win-dot r"></span><span class="win-dot y"></span><span class="win-dot g"></span></div>
@@ -628,7 +629,7 @@
   </div>
 
   <!-- ── TOP 3 DEEP ANALYSIS ── -->
-  <div class="section-sep">
+  <div id="section-top3" class="section-sep">
     <div class="win">
       <div class="win-bar pink">
         <div class="win-dots"><span class="win-dot r"></span><span class="win-dot y"></span><span class="win-dot g"></span></div>
@@ -787,7 +788,7 @@
   </div>
 
   <!-- ── TRADE-OFF COMPARISON ── -->
-  <div class="section-sep">
+  <div id="section-tradeoff" class="section-sep">
     <div class="win">
       <div class="win-bar orange">
         <div class="win-dots"><span class="win-dot r"></span><span class="win-dot y"></span><span class="win-dot g"></span></div>
@@ -904,6 +905,48 @@
   <div>AI Food Decision Assistant · ย่านทองหล่อ (Thonglor) · ทีม 8–12 คน · 2026</div>
   <div style="margin-top:6px">Powered by <strong style="color:var(--pink)">n8n</strong> + <strong style="color:var(--blue)">Apify</strong> + <strong style="color:#888">Google Sheets</strong> + <strong style="color:var(--purple)">Claude AI</strong> &nbsp;|&nbsp; <a href="https://docs.google.com/spreadsheets/d/1c6TLq9-gfXlvk6H84KcXRyh3bzc2UufH82bJwqZGIZY">Data Source</a> &nbsp;|&nbsp; <a href="https://n8n-external.exservice.io/workflow/Nv5BbjRuiGaU9DZg">Workflow</a></div>
 </footer>
+
+<script>
+  // ── NAV SCROLL ──
+  function navScrollTo(sectionId) {
+    const el = document.getElementById(sectionId);
+    if (!el) return;
+    const headerH = document.querySelector('.site-header').offsetHeight;
+    const top = el.getBoundingClientRect().top + window.scrollY - headerH - 8;
+    window.scrollTo({ top, behavior: 'smooth' });
+  }
+
+  // ── ACTIVE STATE ON SCROLL ──
+  const sectionMap = {
+    'section-thonglor': 'Thonglor',
+    'section-objective': 'Objective',
+    'section-workflow': 'Workflow',
+    'section-top10': 'Top 10',
+    'section-top3': 'Top 3',
+    'section-tradeoff': 'Trade-off'
+  };
+
+  const pills = document.querySelectorAll('.nav-pill');
+
+  function setActive(target) {
+    pills.forEach(p => {
+      p.classList.toggle('active', p.dataset.target === target);
+    });
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        setActive(entry.target.id);
+      }
+    });
+  }, { rootMargin: '-48px 0px -60% 0px', threshold: 0 });
+
+  Object.keys(sectionMap).forEach(id => {
+    const el = document.getElementById(id);
+    if (el) observer.observe(el);
+  });
+</script>
 
 </body>
 </html>
